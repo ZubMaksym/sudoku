@@ -19,4 +19,5 @@ def create_grid(sub_grid: int):
     cols  = [ g*sub_grid + c for g in shuffle(row_base) for c in shuffle(row_base) ]
     nums  = shuffle(range(1,sub_grid*sub_grid+1))
     # produce board using randomized baseline pattern
+    # print([ [nums[pattern(r,c)] for c in cols] for r in rows ])
     return [ [nums[pattern(r,c)] for c in cols] for r in rows ]
