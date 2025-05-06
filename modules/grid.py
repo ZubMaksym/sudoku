@@ -1,8 +1,10 @@
+import math
 import pygame
 from .random_fill import *
 from .coords_gen import create_line_cords
 from .settings import font
 from .remove_numbers import remove_nums
+
 
 class Grid:
     def __init__(self):
@@ -15,9 +17,20 @@ class Grid:
         self.occupied_cell_coordinates = self.pre_occupied_cells_cords()
         print(self.occupied_cell_coordinates)
 
-    # def get_mouse_click(self, x: int, y: int) -> None:
+    def get_mouse_click(self, x: int, y: int) -> None:
+        if x > 225 and x < 675 and y > 225 and y < 675:
+            col = (x - 225) // 50
+            row = (y - 225) // 50
+            # print(f"Row: {row}, col: {col}")
+            if not self.is_cell_preoccupied(col, row):
+                self.set_cell(col, row, -1)
         
-
+    def is_cell_preoccupied(self, x: int, y: int) -> bool:
+        #check for occupied cells
+        for cell in self.occupied_cell_coordinates:
+            if (x == cell[1] and y == cell[0]):
+                return True
+        return False
 
 
     def pre_occupied_cells_cords(self) -> list[tuple]:
