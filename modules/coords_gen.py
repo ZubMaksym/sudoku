@@ -12,5 +12,5 @@ def create_line_cords(cell_size: int):
         vr_lines.append((x_point*cell_size +  225, 225))
         vr_lines.append((x_point*cell_size + 225, 675))
         list_points.append(vr_lines)
-    print(list_points)
+    # print(list_points)
     return list_points
