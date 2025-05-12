@@ -1,4 +1,3 @@
-import math
 import pygame
 from copy import deepcopy
 from .random_fill import *
@@ -6,20 +5,23 @@ from .coords_gen import create_line_cords
 from .settings import font
 from .remove_numbers import remove_nums
 from .selection import SelectNumber
+from .solver import SudokuSolver
+from .menu.buttons import solve_button
 
 class Grid:
     def __init__(self):
         self.cell_size = 50
         self.line_coords = create_line_cords(self.cell_size)
-        self.grid = create_grid(sub_grid= base)
-        self.__test_grid = deepcopy(self.grid) # create a copy before removing numbers
+        self.grid = create_grid(sub_grid=base)
+        self.__test_grid = deepcopy(self.grid)  # Створюємо копію перед видаленням чисел
+        self.initial_grid = deepcopy(self.grid)  # Зберігаємо початкове значення
         remove_nums(self.grid)
         self.num_x_offset = 15
         self.game_font = font
         self.occupied_cell_coordinates = self.pre_occupied_cells_cords()
-        # print(self.occupied_cell_coordinates)
         self.selection = SelectNumber(self.game_font)
-        self.isWinner = False
+        self.is_winner = False
+        self.auto_solve_btn = solve_button
 
     def get_mouse_click(self, x: int, y: int) -> None:
         if x > 225 and x < 675 and y > 225 and y < 675:
@@ -31,7 +33,7 @@ class Grid:
         self.selection.button_clicked(x, y)
         if self.check_grids():
             print("Won, Game Over!")
-            self.isWinner = True
+            self.is_winner = True
         
     def is_cell_preoccupied(self, x: int, y: int) -> bool:
         #check for occupied cells
@@ -75,6 +77,7 @@ class Grid:
         self.__draw_lines(surface= surface)
         self.__draw_numbers(surface= surface)
         self.selection.draw(surface= surface)
+        self.auto_solve_btn.show_image(surface= surface)
 
     def get_cell(self, x: int, y: int):
         return self.grid[y][x]
@@ -90,16 +93,29 @@ class Grid:
         return True
     
     def restart(self) -> None:
-        self.grid = create_grid(sub_grid= base)
-        self.__test_grid = deepcopy(self.grid) # create a copy before removing numbers
+        # Відновлюємо початкові значення та знову генеруємо нове поле
+        self.grid = deepcopy(self.initial_grid)
+        self.__test_grid = deepcopy(self.grid)
         remove_nums(self.grid)
         self.occupied_cell_coordinates = self.pre_occupied_cells_cords()
-        self.isWinner = False
+        self.is_winner = False
 
+    def solve_with_button(self):
+        solver = SudokuSolver(self.grid)
+        success = solver.solve()
+        if success:
+            print("Puzzle solved!")
+            print(solver)
+            self.grid = solver.grid  # Оновлюємо решене поле
+        else:
+            print("No solution exists.")
+    
+    def check_is_autosolve_pressed(self):
+        event = pygame.event.get()
+        self.auto_solve_btn.IS_PRESSED = self.auto_solve_btn.is_pressed(event)
+        if (self.auto_solve_btn.IS_PRESSED):
+            self.solve_with_button()
 
-    # def show(self):
-    #     for cell in self.grid:
-    #         print(cell)
 
 if __name__ == "__main__":
     grid = Grid()
