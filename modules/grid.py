@@ -7,6 +7,8 @@ from .remove_numbers import remove_nums
 from .selection import SelectNumber
 from .solver import SudokuSolver
 from .menu.buttons import solve_button
+from .game_timer import GameTimer
+from .misstake_counter import MistakeCounter
 
 class Grid:
     def __init__(self):
@@ -21,6 +23,10 @@ class Grid:
         self.selection = SelectNumber(self.game_font)
         self.is_winner = False
         self.auto_solve_btn = solve_button
+        self.misstakes = 0
+
+        self.timer = GameTimer(self.game_font)
+        self.mistake_counter = MistakeCounter(self.game_font)
 
     def get_mouse_click(self, x: int, y: int) -> None:
         if x > 225 and x < 675 and y > 225 and y < 675:
@@ -28,12 +34,14 @@ class Grid:
             row = (y - 225) // 50
             # print(f"Row: {row}, col: {col}")
             if not self.is_cell_preoccupied(col, row):
+                if self.__test_grid[row][col] != 0 and self.selection.selected_number != self.__test_grid[row][col]:
+                    self.mistake_counter.increment()
                 self.set_cell(col, row, self.selection.selected_number)
         self.selection.button_clicked(x, y)
         if self.check_grids():
             print("Won, Game Over!")
             self.is_winner = True
-        
+                
     def is_cell_preoccupied(self, x: int, y: int) -> bool:
         #check for occupied cells
         for cell in self.occupied_cell_coordinates:
@@ -69,7 +77,7 @@ class Grid:
                         text_surface = self.game_font.render(str(self.get_cell(x, y)), False, (0, 255, 0))
                     if self.get_cell(x, y) != self.__test_grid[y][x]:
                         text_surface = self.game_font.render(str(self.get_cell(x, y)), False, (255, 0, 0))
-
+                        
                     surface.blit(text_surface, (x * self.cell_size + 225 + self.num_x_offset, y * self.cell_size + 225))
 
     def draw_all(self, surface):
@@ -77,6 +85,8 @@ class Grid:
         self.__draw_numbers(surface= surface)
         self.selection.draw(surface= surface)
         self.auto_solve_btn.show_image(surface= surface)
+        self.timer.draw(surface)
+        self.mistake_counter.draw(surface)
 
     def get_cell(self, x: int, y: int):
         return self.grid[y][x]
@@ -98,6 +108,9 @@ class Grid:
         remove_nums(self.grid)
         self.occupied_cell_coordinates = self.pre_occupied_cells_cords()
         self.is_winner = False
+
+        self.timer.reset()
+        self.mistake_counter.reset()
 
     def solve_sudoku(self):
         solver = SudokuSolver(deepcopy(self.__test_grid))
