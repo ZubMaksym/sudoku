@@ -1,12 +1,12 @@
 from random import sample
+from .settings import SUB_GRID_SIZE, GRID_SIZE
 
 #from stack-overflow
-base  = 3
-side  = base*base
+
 
 # pattern for a baseline valid solution
 def pattern(row: int, col: int): 
-    return (base*(row%base)+row//base+col)%side
+    return (SUB_GRID_SIZE*(row%SUB_GRID_SIZE)+row//SUB_GRID_SIZE+col)%GRID_SIZE
 
 # randomize rows, columns and numbers (of valid base pattern)
 def shuffle(s):

@@ -52,7 +52,7 @@ while game:
 
     # Перевірка натиснення кнопки "Solve"
     if grid.auto_solve_btn.is_pressed(event_list):
-        grid.solve_with_button()
+        grid.solve_sudoku()
 
     # Малювання гри
     window.fill((255, 255, 255))

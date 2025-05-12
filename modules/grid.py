@@ -2,7 +2,7 @@ import pygame
 from copy import deepcopy
 from .random_fill import *
 from .coords_gen import create_line_cords
-from .settings import font
+from .settings import font, SUB_GRID_SIZE
 from .remove_numbers import remove_nums
 from .selection import SelectNumber
 from .solver import SudokuSolver
@@ -12,9 +12,8 @@ class Grid:
     def __init__(self):
         self.cell_size = 50
         self.line_coords = create_line_cords(self.cell_size)
-        self.grid = create_grid(sub_grid=base)
+        self.grid = create_grid(sub_grid=SUB_GRID_SIZE)
         self.__test_grid = deepcopy(self.grid)  # Створюємо копію перед видаленням чисел
-        self.initial_grid = deepcopy(self.grid)  # Зберігаємо початкове значення
         remove_nums(self.grid)
         self.num_x_offset = 15
         self.game_font = font
@@ -94,19 +93,19 @@ class Grid:
     
     def restart(self) -> None:
         # Відновлюємо початкові значення та знову генеруємо нове поле
-        self.grid = deepcopy(self.initial_grid)
+        self.grid = create_grid(sub_grid= SUB_GRID_SIZE)
         self.__test_grid = deepcopy(self.grid)
         remove_nums(self.grid)
         self.occupied_cell_coordinates = self.pre_occupied_cells_cords()
         self.is_winner = False
 
-    def solve_with_button(self):
-        solver = SudokuSolver(self.grid)
+    def solve_sudoku(self):
+        solver = SudokuSolver(deepcopy(self.__test_grid))
         success = solver.solve()
         if success:
             print("Puzzle solved!")
-            print(solver)
-            self.grid = solver.grid  # Оновлюємо решене поле
+            self.grid = solver.grid  # Оновлюємо поле
+            self.is_winner = True
         else:
             print("No solution exists.")
     
@@ -114,12 +113,12 @@ class Grid:
         event = pygame.event.get()
         self.auto_solve_btn.IS_PRESSED = self.auto_solve_btn.is_pressed(event)
         if (self.auto_solve_btn.IS_PRESSED):
-            self.solve_with_button()
+            self.solve_sudoku()
 
 
-if __name__ == "__main__":
-    grid = Grid()
-    grid.show()
+# if __name__ == "__main__":
+#     grid = Grid()
+#     grid.show()
 
 
         
