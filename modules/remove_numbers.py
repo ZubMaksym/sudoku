@@ -4,7 +4,7 @@ from .solution_counter import SudokuSolverCounter  # Це твій новий к
 
 def remove_nums(grid: list[list]) -> None:
     num_of_cells = len(grid) * len(grid)
-    empties_target = num_of_cells * 3 // 7  # Скільки хочеш видалити
+    empties_target = num_of_cells * 3 // 14  # Скільки хочеш видалити
     cells = sample(range(num_of_cells), num_of_cells)  # Рандомний порядок проходу клітинок
     removed = 0
 
