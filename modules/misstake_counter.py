@@ -11,5 +11,5 @@ class MistakeCounter:
         self.mistakes += 1
 
     def draw(self, surface, x=50, y=100):
-        text_surface = self.font.render(f"Mistakes: {self.mistakes}", True, (255, 0, 0))
+        text_surface = self.font.render(f"Mistakes: {self.mistakes}/3", True, (255, 0, 0))
         surface.blit(text_surface, (x, y))

@@ -31,11 +31,14 @@ class Button():
         return False
                                 
 
-# start_button = Button(x= 500, y= 350, width= 200, height= 80, name_image= start_image)
-# exit_button = Button(x= 500, y= 500, width= 200, height= 80, name_image= exit_image)
+# start_button_menu = Button(x= 500, y= 350, width= 200, height= 80, name_image= start_image)
+# exit_button_menu = Button(x= 500, y= 500, width= 200, height= 80, name_image= exit_image)
 # solve_button = Button(x= 880, y= 250, width= 80, height= 80, name_image= solve_image)
 
-start_button = Button(x=490, y=330, width=250, height=90, text="Classic Game")
-hint_button = Button(x=440, y=450, width=350, height=90, text="Game With Hints")
+start_button_menu = Button(x=490, y=330, width=250, height=90, text="Classic Game")
+hint_button_menu = Button(x=440, y=450, width=350, height=90, text="Game With Hints")
+exit_button_menu = Button(x=490, y=570, width=250, height=90, text="Exit")
+
 solve_button = Button(x=870, y=250, width=100, height=50, text="Solve", font_size= 20)
-exit_button = Button(x=490, y=570, width=250, height=90, text="Exit")
+pause_button = Button(x=870, y= 310, width=100, height=50, text="Pause", font_size= 20)
+hint_button = Button(x=870, y= 370, width=100, height=50, text="Hint", font_size= 20)

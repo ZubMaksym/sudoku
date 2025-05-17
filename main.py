@@ -1,12 +1,11 @@
 import pygame
-from modules.settings import window, victory_font, restart_font, menu_font
+from modules.settings import window, victory_font, restart_font, menu_font, defeat_font
 from modules.grid import Grid
-from modules.menu.buttons import start_button, exit_button, hint_button
-from modules.game_timer import GameTimer
+from modules.menu.buttons import start_button_menu, exit_button_menu, hint_button_menu
+from modules.hint_grid import HintGrid
 
 pygame.init()
 
-grid = Grid()
 game = True
 in_menu = True
 
@@ -17,9 +16,9 @@ while game:
         menu_surface = menu_font.render("SUDOKU", False, (0, 0, 0))
         window.blit(menu_surface, (390, 70))
 
-        start_button.show_image(window)
-        exit_button.show_image(window)
-        hint_button.show_image(window)
+        start_button_menu.show_image(window)
+        exit_button_menu.show_image(window)
+        hint_button_menu.show_image(window)
 
         event_list = pygame.event.get()
         for event in event_list:
@@ -27,18 +26,21 @@ while game:
                 game = False
 
         # Обробка натискання кнопок меню
-        if start_button.is_pressed(event_list):
+        if start_button_menu.is_pressed(event_list):
             in_menu = False
+            grid = Grid()
+            grid.is_hint_game = False
             grid.restart()
             grid.timer.reset()
 
-        if hint_button.is_pressed(event_list):
+        if hint_button_menu.is_pressed(event_list):
             in_menu = False
+            grid = HintGrid()
+            grid.is_hint_game = True
             grid.restart()
-            grid.show_hints = True
             grid.timer.reset()
 
-        if exit_button.is_pressed(event_list):
+        if exit_button_menu.is_pressed(event_list):
             pygame.quit()
             exit()
 
@@ -51,20 +53,32 @@ while game:
         if event.type == pygame.QUIT:
             game = False
 
-        if event.type == pygame.MOUSEBUTTONDOWN and not grid.is_winner:
+        if isinstance(grid, HintGrid) and grid.hint_btn.is_pressed(event_list) and not grid.is_winner and not grid.is_defeat:
+            grid.use_hint()
+
+        if grid.is_paused:
+            continue
+
+        if event.type == pygame.MOUSEBUTTONDOWN and not grid.is_winner and not grid.is_defeat:
             pos = pygame.mouse.get_pos()
             grid.get_mouse_click(pos[0], pos[1])
 
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE and grid.is_winner:
+            if grid.is_paused:
+                continue
+            if event.key == pygame.K_SPACE and (grid.is_winner or grid.is_defeat):
                 grid.restart()
                 grid.timer.reset()
-            elif pygame.K_1 <= event.key <= pygame.K_9:
+            elif pygame.K_1 <= event.key <= pygame.K_9 and not grid.is_winner and not grid.is_defeat:
                 number = event.key - pygame.K_0
                 grid.handle_keyboard_input(number)
 
-    if grid.auto_solve_btn.is_pressed(event_list):
-        grid.solve_sudoku()
+    if grid.pause_btn.is_pressed(event_list):
+        grid.toggle_pause()
+    
+    if not grid.is_paused:
+        if grid.auto_solve_btn.is_pressed(event_list):
+            grid.solve_sudoku()
 
     window.fill((255, 255, 255))
     grid.draw_all(surface=window)
@@ -75,5 +89,14 @@ while game:
         window.blit(won_surface, (540, 70))
         restart_surface = restart_font.render("Press space to restart", False, (0, 255, 0))
         window.blit(restart_surface, (440, 130))
+    elif grid.is_defeat:
+        grid.timer.pause()
+        defeat_surface = defeat_font.render("You Lost", False, (255, 0, 0))
+        window.blit(defeat_surface, (540, 70))
+        restart_surface = restart_font.render("Press space to restart", False, (255, 0, 0))
+        window.blit(restart_surface, (440, 130))
+    elif grid.is_paused:
+        paused_surface = victory_font.render("PAUSED", False, (0, 0, 255))
+        window.blit(paused_surface, (530, 70))
 
     pygame.display.flip()

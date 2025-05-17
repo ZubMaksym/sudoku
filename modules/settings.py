@@ -7,6 +7,7 @@ pygame.display.set_caption("Sudoku")
 pygame.font.init()
 font = pygame.font.SysFont("Comic Sans MS", 36)
 victory_font = pygame.font.SysFont("Comic Sans MS", 52)
+defeat_font = victory_font
 restart_font = pygame.font.SysFont("Comic Sans MS", 42)
 menu_font = pygame.font.SysFont("Comic Sans MS", 102)
 
