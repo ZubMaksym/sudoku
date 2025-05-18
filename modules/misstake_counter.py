@@ -1,4 +1,3 @@
-
 class MistakeCounter:
     def __init__(self, font):
         self.font = font

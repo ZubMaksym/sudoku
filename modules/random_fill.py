@@ -3,7 +3,6 @@ from .settings import SUB_GRID_SIZE, GRID_SIZE
 
 #from stack-overflow
 
-
 # pattern for a baseline valid solution
 def pattern(row: int, col: int): 
     return (SUB_GRID_SIZE*(row%SUB_GRID_SIZE)+row//SUB_GRID_SIZE+col)%GRID_SIZE
