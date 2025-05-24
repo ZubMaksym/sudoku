@@ -122,7 +122,7 @@ class Grid:
 
     def solve_sudoku(self):
         solver = SudokuSolver(deepcopy(self.__test_grid))
-        if solver.solve():
+        if solver.solve() and self.is_defeat == False:
             self.grid = solver.grid
             self.is_winner = True
             self.highlight_value = None

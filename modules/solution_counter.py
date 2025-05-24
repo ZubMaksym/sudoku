@@ -24,4 +24,4 @@ class SudokuSolverCounter(SudokuSolver):
                 self.grid[row][col] = 0
 
                 if self.solutions > 1:
-                    return  # Досить, більше ніж 1 розв'язок уже знайдено
+                    return 

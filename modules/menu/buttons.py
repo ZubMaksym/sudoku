@@ -5,21 +5,21 @@ class Button():
     def __init__(self, x: int, y: int, width: int, height: int, text: str, font_size: int = 36):
         self.X = x
         self.Y = y
-        self.WIDTH = width
-        self.HEIGHT = height
-        self.TEXT = text
+        self.width = width
+        self.height = height
+        self.text = text
         self.FONT = pygame.font.SysFont("Comic Sans MS", font_size, bold=True)
-        self.COLOR = (70, 130, 180)  # Стальово-синій
+        self.COLOR = (70, 130, 180)
         self.HOVER_COLOR = (100, 149, 237)
         self.TEXT_COLOR = (255, 255, 255)
-        self.RECT = pygame.Rect(self.X, self.Y, self.WIDTH, self.HEIGHT)
+        self.RECT = pygame.Rect(self.X, self.Y, self.width, self.height)
 
     def show_image(self, surface):
         mouse_pos = pygame.mouse.get_pos()
         current_color = self.HOVER_COLOR if self.RECT.collidepoint(mouse_pos) else self.COLOR
         pygame.draw.rect(surface, current_color, self.RECT, border_radius=10)
         
-        text_surface = self.FONT.render(self.TEXT, True, self.TEXT_COLOR)
+        text_surface = self.FONT.render(self.text, True, self.TEXT_COLOR)
         text_rect = text_surface.get_rect(center=self.RECT.center)
         surface.blit(text_surface, text_rect)
 
@@ -29,12 +29,7 @@ class Button():
             if event.type == pygame.MOUSEBUTTONDOWN and self.RECT.collidepoint(pos):
                 return True
         return False
-                                
-
-# start_button_menu = Button(x= 500, y= 350, width= 200, height= 80, name_image= start_image)
-# exit_button_menu = Button(x= 500, y= 500, width= 200, height= 80, name_image= exit_image)
-# solve_button = Button(x= 880, y= 250, width= 80, height= 80, name_image= solve_image)
-
+                        
 start_button_menu = Button(x=490, y=330, width=250, height=90, text="Classic Game")
 hint_button_menu = Button(x=440, y=450, width=350, height=90, text="Game With Hints")
 exit_button_menu = Button(x=490, y=570, width=250, height=90, text="Exit")
